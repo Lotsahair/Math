@@ -18,16 +18,18 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.
    I'd prefer not to give any contact information as this is a personal project. I made it free out of principle */ 
 int main(int argc, char *argv[]){
-  Matrix *a = m_create_matrix(5, 4, YES);
-  Matrix *b = m_create_matrix(4, 3, YES);
-  m_print_matrix(a);
-  printf("%s", "matrix a above \n");
-  m_print_matrix(b);
-  printf("%s", "matrix b above \n");
-    Matrix *c = m_multiply_matrices(a,b, YES);
-       m_print_matrix(c);
-     printf("%s", "matrix c above \n");
-   m_destroy_matrix(c);
+  Matrix *a = m_create_matrix(7,9, YES);
+  // Matrix *b = m_create_matrix(40000, 3000, YES);
+   m_print_matrix(a);
+   m_ref(a);
+   printf("%s", "\n");
+   m_print_matrix(a);
+   m_destroy_matrix(a);
+  // printf("%s", "matrix a above \n");
+  // m_print_matrix(b);
+  //  printf("%s", "matrix b above \n");
+  //  printf("%s", "matrix c above \n");
+     // m_destroy_matrix(c);
   //  printf("%s", "here is the number \n");
   // printf("%d", f);
   return 0;

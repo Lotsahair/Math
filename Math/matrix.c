@@ -29,18 +29,20 @@ Matrix *m_create_matrix(unsigned long long rows, unsigned long long columns, int
   m->rows = rows;
   m->columns = columns;
   m->kind = regular;
-  m->entries = malloc(rows * sizeof(int*));
+  m->entries = malloc(rows * sizeof(long double*));
   if(m->entries == NULL){
     printf("%s", "Not neough memory available for matrix creation" );
   }
   for(i=0; i<rows; i++){
-    m->entries[i] = malloc(columns * sizeof(int));
+    m->entries[i] = malloc(columns * sizeof(long double));
   }
   if(initialized == 1){
     srand(time(NULL));
     for(i = 0; i < rows; i++){
       for(j = 0 ; j < columns; j++){
-	int val = rand() % 100 +1;
+	long double val;
+	int nval = rand() % 100 +1;
+	val = (long double) nval;
 	*(*(m->entries + i) + j) = val;
       }
     }
@@ -62,7 +64,7 @@ void m_print_matrix(Matrix *a){
   int j = 0;
   for(i = 0; i < a->rows; i++){
     for(j=0; j < a->columns; j++){
-      printf("%d", *(*(a->entries+i)+j));
+      printf("%.1Lf", *(*(a->entries+i)+j));
       printf("%s", " ");
     }
     printf("%s", "\n");
@@ -110,6 +112,35 @@ Matrix *m_multiply_matrices(Matrix *a, Matrix *b, int destroying){
   return m;
 }
 
-//Matrix *m_transpose_matrix(Matrix *a){
+void m_ref(Matrix *m){
+  int i = 0;
+  int j = 0;
+  while(i < m->rows && j < m->columns){
+    if(*(*(m->entries+i)+j) == 0){
+      int k = i+1;
+      while(k < m->columns){
+	if(*(*(m->entries+k)+j) != 0){
+	  m_swap_rows(*(m->entries+i), *(m->entries+k));
+	  k= m->rows;
+	}
+  else{
+    k++;
+  }
+      }
+    }
+    int entry = *(*(m->entries+i)+j);
+    printf("%d", entry);
+    for(int c = j; c < m->columns; c++){
+	*(*(m->entries+i)+c)= *(*(m->entries+i)+c) * 1/entry;
+    }
+  i++;
+  j++;
+  }
+}
 
-  //}
+void m_swap_rows(long double *r1, long double *r2){
+  long double *temp;
+  temp = r1;
+  r1 = r2;
+  r2 = temp;
+}

@@ -20,6 +20,7 @@
 #ifndef MATRIX
 #define MATRIX
 #include <stdio.h>
+#include <float.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
@@ -29,7 +30,7 @@ typedef enum{regular, square, identity, identity_square}Matrix_Kind;
 typedef struct Matrices{
   unsigned long long rows;
   unsigned long long columns;
-  int **entries;
+  long double **entries;
   Matrix_Kind kind;
 }Matrix;
 
@@ -47,5 +48,7 @@ Matrix *m_multiply_matrices(Matrix *a, Matrix *b, int destroying);
 Matrix *m_transpose_matrix(Matrix *a, int destroying);
 
 //a helper function used for simple matrix multiplication
-int m_row_column_scalar_multiplication(int i, int j);
+void m_ref(Matrix *m);
+void m_rref(Matrix *m);
+void m_swap_rows(long double *r1, long double *r2);
 #endif
