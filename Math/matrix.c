@@ -64,7 +64,7 @@ void m_print_matrix(Matrix *a){
   int j = 0;
   for(i = 0; i < a->rows; i++){
     for(j=0; j < a->columns; j++){
-      printf("%.1Lf", *(*(a->entries+i)+j));
+      printf("%Lf", *(*(a->entries+i)+j));
       printf("%s", " ");
     }
     printf("%s", "\n");
@@ -128,14 +128,38 @@ void m_ref(Matrix *m){
   }
       }
     }
-    int entry = *(*(m->entries+i)+j);
-    printf("%d", entry);
-    for(int c = j; c < m->columns; c++){
-	*(*(m->entries+i)+c)= *(*(m->entries+i)+c) * 1/entry;
+    long double entry = *(*(m->entries+i)+j);
+    // printf("%1.Lf%s", entry, "  ");
+    for(int c = 0; c < m->columns; c++){
+      for(int r = i; r < m->rows; r++){
+	long double one = 1.0;
+	//maybe using 1 causes error?
+	*(*(m->entries+r)+c)= *(*(m->entries+r)+c) * one/entry;
+	//	printf("%1.Lf", *(*(m->entries+l)+c));
+      }
+    }
+    int a = i+1;
+    //    printf("%s%d%s", "value of a:" , a, "\n");
+    while(a < m->rows){
+      long double zeroed_entry = *(*(m->entries+a)+j);
+      printf("%Lf%s", zeroed_entry, "\n");
+      for(int c = j; c < m->columns; c++){
+	//	printf("%1.Lf", zeroed_entry);
+	//	printf("%d%s%d%s", a, " ", c, "\n");
+	*(*(m->entries+a)+c) = *(*(m->entries+a)+c) - *(*(m->entries+i)+j) * zeroed_entry;
+      }
+      a++;
     }
   i++;
   j++;
   }
+}
+
+void m_rref(Matrix *m){
+  m_ref(m);
+  for(int i = m->rows; i > 0; i--){
+    for(int j = m->columns; j > 0; j){
+      for(int a = i+1; 
 }
 
 void m_swap_rows(long double *r1, long double *r2){
