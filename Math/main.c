@@ -16,25 +16,39 @@
 
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-   I'd prefer not to give any contact information as this is a personal project. I made it free out of principle */ 
+   I'd prefer not to give any contact information as this is a personal project. I made it free out of principle */
 int main(int argc, char *argv[]){
-  Matrix *a = m_create_matrix(4,4, YES);
-  // Matrix *b = m_create_matrix(40000, 3000, YES);
-     m_print_matrix(a);
-   m_ref(a);
+  /*   Matrix *a = m_create_matrix(3,6,YES );
+   *(*(a->entries+0)+0)=0.000000;
+  *(*(a->entries+0)+1)=0.000000;
+  *(*(a->entries+0)+2)=-2.000000;
+  *(*(a->entries+0)+3)=0.000000;
+  *(*(a->entries+0)+4)=7.000000;
+  *(*(a->entries+0)+5)=12.000000;
+  *(*(a->entries+1)+0)=2.000000;
+  *(*(a->entries+1)+1)=4.000000;
+  *(*(a->entries+1)+2)=-10.000000;
+  *(*(a->entries+1)+3)=6.000000;
+  *(*(a->entries+1)+4)=12.000000;
+  *(*(a->entries+1)+5)=28.000000;
+  *(*(a->entries+2)+0)=2.000000;
+  *(*(a->entries+2)+1)=4.000000;
+  *(*(a->entries+2)+2)=-5.000000;
+  *(*(a->entries+2)+3)=6.000000;
+  *(*(a->entries+2)+4)=-5.000000;
+  *(*(a->entries+2)+5)=-1.000000;
+    m_print_matrix(a);
+  printf("%s", "matrix a above \n");
+              m_ref(a);
     printf("%s", "\n");
-   m_print_matrix(a);
-     m_destroy_matrix(a);
-     /* long double b = 4;
-   long double one = 1;
-   long double c = one/b;
-   printf("%Lf",c);*/
-  // printf("%s", "matrix a above \n");
-  // m_print_matrix(b);
-  //  printf("%s", "matrix b above \n");
-  //  printf("%s", "matrix c above \n");
-     // m_destroy_matrix(c);
-  //  printf("%s", "here is the number \n");
-  // printf("%d", f);
+         m_print_matrix(a);
+	 m_destroy_matrix(a);
+ */
+    Matrix *a = m_create_identity_matrix(4,4);
+    //   m_lower_tri_form(a);
+    m_print_matrix(a);
+    printf("%s", "\n");
+    //        printf("%s%Lf%s", "value of determinant a:", m_determinant(a), "\n");
+  m_destroy_matrix(a);
   return 0;
 }

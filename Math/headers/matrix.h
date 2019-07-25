@@ -26,7 +26,8 @@
 #include <time.h>
 #define YES 1
 #define NO 0
-typedef enum{regular, square, identity, identity_square}Matrix_Kind;
+/* Maybe redundant to call it square upper/lower triangular as only square matrices can be in triangular form, but for readability's sake i call it this */
+typedef enum{regular, square, identity, identity_square, square_upper_triangular, square_lower_triangular}Matrix_Kind;
 typedef struct Matrices{
   unsigned long long rows;
   unsigned long long columns;
@@ -41,6 +42,7 @@ void m_destroy_matrix(Matrix *m);
 void m_print_matrix(Matrix *a);
 
 Matrix *m_add_matrices(Matrix *a, Matrix *b, int destroying);
+Matrix *m_subtract_matrices(Matrix *a, Matrix *b, int destroying);
 //does Strassen matrix multiplication on two matrices)
 Matrix *m_strassen_multiplication(Matrix *a, Matrix *b, int destroying);
 Matrix *m_multiply_matrices(Matrix *a, Matrix *b, int destroying);
@@ -50,5 +52,21 @@ Matrix *m_transpose_matrix(Matrix *a, int destroying);
 //a helper function used for simple matrix multiplication
 void m_ref(Matrix *m);
 void m_rref(Matrix *m);
-void m_swap_rows(long double *r1, long double *r2);
+
+/* Swaps rows. Assume row one is equal in size to row 2 */
+void m_swap_rows(long double *r1, long double *r2, int size);
+
+Matrix *m_rowwise_merge_matrix(Matrix *a, Matrix *b, int destroying);
+
+Matrix *m_columnwise_merge_matrix(Matrix *a, Matrix *b, int destroying);
+
+double long m_determinant(Matrix *m);
+
+void m_scalar_mult(Matrix *m, int scalar);
+
+void m_lower_tri_form(Matrix *m);
+
+Matrix *m_create_identity_matrix(unsigned long long rows, unsigned long long columns);
+
+Matrix *m_copy_matrix(Matrix *m);
 #endif
