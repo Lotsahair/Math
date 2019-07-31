@@ -1,4 +1,4 @@
-     
+
 /* Math is a simple program intended as personal training in C
    Copyright (C) 2019-undetermined  Anton Norgaard
 
@@ -16,7 +16,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-   I'd prefer not to give any contact information as this is a personal project. I made it free out of principle */ 
+   I'd prefer not to give any contact information as this is a personal project. I made it free out of principle */
 #ifndef MATRIX
 #define MATRIX
 #include <stdio.h>
@@ -33,6 +33,9 @@ typedef struct Matrices{
   unsigned long long columns;
   long double **entries;
   Matrix_Kind kind;
+  /*A byte to denote whether we have had to swap rows to ensure nonzero entry in pivot. Used to adjus where to look for next entry */
+  char has_swapped[1];
+  int column_offset;
 }Matrix;
 
 Matrix *m_create_matrix(unsigned long long rows, unsigned long long columns, int initialized);
@@ -62,11 +65,15 @@ Matrix *m_columnwise_merge_matrix(Matrix *a, Matrix *b, int destroying);
 
 double long m_determinant(Matrix *m);
 
-void m_scalar_mult(Matrix *m, int scalar);
+void m_scalar_mult(Matrix *m, long double scalar);
 
 void m_lower_tri_form(Matrix *m);
+
+void m_upper_tri_form(Matrix *m);
 
 Matrix *m_create_identity_matrix(unsigned long long rows, unsigned long long columns);
 
 Matrix *m_copy_matrix(Matrix *m);
+
+Matrix *m_inverse_matrix(Matrix *m);
 #endif

@@ -28,6 +28,8 @@ Matrix *m_create_matrix(unsigned long long rows, unsigned long long columns, int
   }
   m->rows = rows;
   m->columns = columns;
+  m->column_offset = 1;
+  m->has_swapped[0] = 'n';
   if( m->rows == m->columns){
     m->kind == square;
   }
@@ -138,58 +140,55 @@ void m_ref(Matrix *m){
   /*Our initial starting point for pivot element */
   int i = 0;
   int j = 0;
-  /*A byte to denote whether we have had to swap rows to ensure nonzero entry in pivot. Used to adjus where to look for next entry */
-  char has_swapped;
-  int column_offset = 1;
   int a;
     // printf("%s", "does the code reach here? \n");
   /*We will continue looking for pivots untill we have reached min(rows, columns)  */
   while(i <= m->rows && j <= m->columns){
     /* If pivot is zero, look for swapping row */
     if(*(*(m->entries+i)+j) == 0.000000){
-      printf("%s%d%d%s", " Entry ", i, j, " found to be zero, looking for suitable row to swap with \n " );
+    //  printf("%s%d%d%s", " Entry ", i, j, " found to be zero, looking for suitable row to swap with \n " );
       int k = i+1;
       while(k < m->rows){
 	if(*(*(m->entries+k)+j) != 0.000000){
-	  printf("%s%d%s%d%s", " We have found a suitable row to swap with, we swap row "  ,i ," with row ", k, "\n");
-	  printf("%s%Lf%s", "value of k,j : ", *(*(m->entries+k)+j), "\n");
+	 /* printf("%s%d%s%d%s", " We have found a suitable row to swap with, we swap row "  ,i ," with row ", k, "\n");
+	  printf("%s%Lf%s", "value of k,j : ", *(*(m->entries+k)+j), "\n"); */
       	  m_swap_rows(*(m->entries+i), *(m->entries+k), m->columns);
 	  k= m->rows;
-	  has_swapped = 'y';
+	  m->has_swapped[0] = 'y';
 	}
   else{
     k++;
-    column_offset++;
+    m->column_offset++;
   }
 	//	j++;
       }
-       printf("%s", " We are done looking a rows to swap \n");
+    /*   printf("%s", " We are done looking a rows to swap \n");
        m_print_matrix(m);
-       printf("%s", " Here is the matrice after swapping rows \n");
+       printf("%s", " Here is the matrice after swapping rows \n");*/
     }
     /*pivot we will reduce to 1 */
     long double entry = *(*(m->entries+i)+j);
-     printf("%s%d%s%d%s%s%d%d%s%Lf%s", " Okay, for row ", i , " of ", m->rows, " rows ", " we will reduce ", i,j, " i.e ", *(*(m->entries+i)+j), " to 1 \n");
-          sleep(3);
+    /* printf("%s%d%s%d%s%s%d%d%s%Lf%s", " Okay, for row ", i , " of ", m->rows, " rows ", " we will reduce ", i,j, " i.e ", *(*(m->entries+i)+j), " to 1 \n");
+          sleep(3); */
     /*Multiply each row in current row of pivot with 1/pivotval to reduce it to 1  */
     for(int c = j; c < m->columns; c++){
 	long double one = 1.0;
-		printf("%s%d%d%s%Lf%s%Lf", " We will now multiply entry ", i, c, " i.e ", *(*(m->entries+i)+c), " by " , one/entry);
-				sleep(3);
+	/*	printf("%s%d%d%s%Lf%s%Lf", " We will now multiply entry ", i, c, " i.e ", *(*(m->entries+i)+c), " by " , one/entry);
+				sleep(3); */
 	*(*(m->entries+i)+c)= *(*(m->entries+i)+c) * one/entry;
-		printf("%s%d%d%s%Lf%s", " and the value of ", i , c, " is now ", *(*(m->entries+i)+c), "\n");
+/*		printf("%s%d%d%s%Lf%s", " and the value of ", i , c, " is now ", *(*(m->entries+i)+c), "\n");
 			sleep(3);
-		       	printf("%d%d%s", i, c, "\n");
+		       	printf("%d%d%s", i, c, "\n"); */
    }
-     m_print_matrix(m);
-     printf("%s", "\n");
+  //   m_print_matrix(m);
+  /*   printf("%s", "\n");
      printf("%s%d%s", "This is the matrix after reducing the first nonzero entry in ",i, " to a leading one \n ");
           sleep(3);
      printf("%s%d%d%s%lld%d%s", " Okay, now to reduce all values from ", i+1, j, " to ", m->rows, j, " to zero \n ");
-             sleep(3);
+             sleep(3); */
     /*For row = i+1 to # rows, we will reduce all entries of r+j to #rows+j to zero */
-	if(has_swapped == 'y'){
-	  a = column_offset+1;
+	if(m->has_swapped[0] == 'y'){
+	  a = m->column_offset+1;
 	}
 	else{
 	  a = i+1;
@@ -200,27 +199,27 @@ void m_ref(Matrix *m){
      }
      else{
     for(int r = a;  r < m->rows; r++){
-       printf("%s%d%s%d%d%s%Lf%s",  " Now for row ", r, " We will reduce ", a,j, " to zero i.e ", *(*(m->entries+a)+j), "\n");
+    //   printf("%s%d%s%d%d%s%Lf%s",  " Now for row ", r, " We will reduce ", a,j, " to zero i.e ", *(*(m->entries+a)+j), "\n");
       long double zeroed_entry = *(*(m->entries+a)+j);
-      printf("%Lf", *(*(m->entries+i)+j));
+    //  printf("%Lf", *(*(m->entries+i)+j));
             a++;
-       sleep(3);
-       printf("%Lf%s%s", zeroed_entry," the value of the entry to be zeroed " , "\n");
+  /*     sleep(3);
+       printf("%Lf%s%s", zeroed_entry," the value of the entry to be zeroed " , "\n");*/
       for(int c = j; c < m->columns; c++){
-		printf("%1.Lf", zeroed_entry);
-			printf("%s%d%s%d%s","value of rows x columns: " , r, " ", c, "\n");
+	//	printf("%1.Lf", zeroed_entry);
+		/*	printf("%s%d%s%d%s","value of rows x columns: " , r, " ", c, "\n");
 					sleep(3);
 			printf("%s%d%d%s%d%d%s", " We multiply-subtract ", r,c, " by ", i,c, "\n" );
-			printf("%s%Lf%s%Lf%s", "Now, we multiply-subtract ", *(*(m->entries+r)+c), " by - ", *(*(m->entries+i)+c) * zeroed_entry  , "\n");
+			printf("%s%Lf%s%Lf%s", "Now, we multiply-subtract ", *(*(m->entries+r)+c), " by - ", *(*(m->entries+i)+c) * zeroed_entry  , "\n"); */
 	*(*(m->entries+r)+c) = *(*(m->entries+r)+c) - *(*(m->entries+i)+c) * zeroed_entry;
-		sleep(3);
+	//	sleep(3);
       }
     }
   }
-    if(has_swapped == 'y' && *(*(m->entries+i+1)+j+1) == 0.000000){
+    if(m->has_swapped[0] == 'y' && *(*(m->entries+i+1)+j+1) == 0.000000){
       i++;
-      j+=column_offset+1;
-      column_offset = 1;
+      j+= m->column_offset+1;
+      m->column_offset = 1;
       //      has_swapped = 'n';
     }
     else{
@@ -231,56 +230,50 @@ void m_ref(Matrix *m){
 }
 
 void m_rref(Matrix *m){
-  // printf("%s", "can the code at least beging reducing to rref? \n");
   m_ref(m);
-   m_print_matrix(m);
-
   int i;
   int j;
-  if(m->kind == identity || m->kind == identity_square){
-    return;
-  }
+  m_print_matrix(m);
+  printf("%s", "\n");
   if(m->kind == square){
-    i = m->rows;
-    j = m->columns;
+    //we take index-1 as max index == length-1
+    i = m->rows-1;
+    j = m->columns-1;
   }
   else{
     if(m->rows > m->columns){
       i = m->columns-1;
-      j = m->columns-1;
+      j = m->rows-2;
+    }
+    if(m->columns > m->rows){
+      i = m->rows-1;
+      j = m->columns-2;
+    }
+  }
+  while(i >= 0 && j >= 0){
+    printf("%s%d%s%d%s", "We are at ", i, " ", j, "\n");
+    sleep(3);
+      long double current_pivot = *(*(m->entries+i)+j);
+    for(int r = i-1; r > -1; r--){
+        long double row_pivot = *(*(m->entries+r)+j);
+        for(int c = j; c < m->columns; c++){
+          printf("%Lf%s",row_pivot*current_pivot, "\n" );
+            *(*(m->entries+r)+c) = *(*(m->entries+r)+c) - row_pivot*current_pivot;
+            printf("%s%d%s", " value of r ", r, "\n");
+        }
+    }
+    if(m->has_swapped[0] == 'y'){
+      i--;
+      j-= m->column_offset+1;
+      m->column_offset = 1;
     }
     else{
-      i = m->rows-1;
-      j = m->rows-1;
+      i--;
+      j--;
     }
   }
-  printf("%s%d%d%s", "value of i,j = :", i, j, "\n");
-  while(i > 0 && j > 0 ){
-    // printf("%s%d%d%s%lld%d%s", " Okay, now to reduce all values from ", i-1, j, " to ", 0, j, " to zero \n ");
-    // sleep(3);
-    int a = i-1;
-    // printf("%s%d%s", "value of a:" , a, "\n");
-    for(int r = a; r > -1; r--){
-      //  printf("%s%d%s%d%d%s%Lf%s",  " Now for row ", r, " We will reduce ", a,j, " to zero i.e ", *(*(m->entries+a)+j), "\n");
-       long double zeroed_entry = *(*(m->entries+a)+j);
-      a--;
-      // sleep(3);
-      // printf("%Lf%s%s", zeroed_entry," the value of the entry to be zeroed " , "\n");
-      for(int c = 0; c <  m->columns; c++){
-	//	printf("%1.Lf", zeroed_entry);
-	//	printf("%s%d%s%d%s","value of rows x columns: " , r, " ", c, "\n");
-	//	sleep(3);
-	//	printf("%s%d%d%s%d%d%s", " We multiply-subtract ", r,c, " by ", i,c, "\n" );
-	//	printf("%s%Lf%s%Lf%s", "Now, we multiply-subtract ", *(*(m->entries+r)+c), " by - ", *(*(m->entries+i)+c) * zeroed_entry  , "\n");
-	*(*(m->entries+r)+c) = *(*(m->entries+r)+c) - *(*(m->entries+i)+c) * zeroed_entry;
-	//		sleep(3);
-      }
-    }
-  i--;
-  j--;
-  }
-}
 
+}
 
 
 void m_swap_rows(long double *r1, long double *r2, int size){
@@ -366,7 +359,7 @@ Matrix *m_columnwise_merge_matrix(Matrix *a, Matrix *b, int destroying){
   }
 }
 
-void m_lower_tri_form(Matrix *m){
+void m_upper_tri_form(Matrix *m){
   int i = 0;
   int j = 0;
   long double one = 1.000000;
@@ -419,178 +412,68 @@ void m_lower_tri_form(Matrix *m){
   //  m_print_matrix(m);
   }
 
-
-/*void m_lower_tri_form(Matrix *m){
-  m_print_matrix(m);
-  printf("%s", "\n");
-  int i = 0;
-  int j = 0;
+void m_lower_tri_form(Matrix *m){
+  int i = m->rows-1;
+  int j = m->columns-1;
   long double one = 1.000000;
-  this one to restore value
-  long double first_pivot = *(*(m->entries+0)+0);
+  while(i >= 0 && j >= 0){
+  //  printf("%d%s%d%s", i, " ", j, "\n");
+//    sleep(3);
+     long double current_pivot = *(*(m->entries+i)+j);
+  //   printf("%Lf%s", current_pivot, "\n");
+  //     sleep(3);
+     for(int c = j; c > -1; c--){
+         *(*(m->entries+i)+c) = *(*(m->entries+i)+c) * one/current_pivot;
+     }
+  //   sleep(3);
+  //   m_print_matrix(m);
+  //   sleep(3);
+  //    printf("%s%Lf%s"," Value of the pivot " , current_pivot, "\n");
+     for(int r = i-1; r > -1; r--){
+      // printf("%s", "does code reach here");
+         long double row_pivot = *(*(m->entries+r)+j);
+    //     printf("%s%d%s%Lf%s", "Multiply row ", i, " by ", row_pivot, "\n");
+       for(int c = j; c > -1; c--){
+           *(*(m->entries+i)+c) = *(*(m->entries+i)+c) * row_pivot;
+        }
+    //    m_print_matrix(m);
+    //    printf("%s", "\n");
+//        sleep(3);
+  //      printf("%s%d%s%d", "subtract row ", i, " from ", r);
+        for(int c = j; c > -1; c--){
+            *(*(m->entries+r)+c) = *(*(m->entries+r)+c) - *(*(m->entries+i)+c);
+         }
+    //     m_print_matrix(m);
+    //     printf("%s", "\n");
+    //     sleep(3);
+    //     printf("%Lf%s", row_pivot, "\n");
+    //     printf("%s", " and restore it \n" );
+         for(int c = j; c > -1; c--){
+             *(*(m->entries+i)+c) = *(*(m->entries+i)+c) * one/row_pivot;
+          }
+      //   m_print_matrix(m);
+      //    printf("%s", "\n");
+        //  sleep(3);
 
-  for (int c = 0; c < m->columns; c++){
-      *(*(m->entries+0)+c) *= one/first_pivot;
-  }
-
-
-  for(int r = i+1; r < m->rows; r++){
-    long double cur_entry = *(*(m->entries+r)+j);
-    for(int c = 0; c < m->columns; c++){
-        *(*(m->entries+i)+c) *= cur_entry;
-    }
-    for(int c = 0; c < m->columns; c++){
-        *(*(m->entries+r)+c) = *(*(m->entries+r)+c) - *(*(m->entries+i)+c);
-    }
-    for(int c = 0; c < m->columns; c++){
-        *(*(m->entries+i)+c) *= one/cur_entry;
-    }
-  }
-  //printf("%Lf%s", cur_pivot, "\n");
-  for (int c = 0; c < m->columns; c++){
-        *(*(m->entries+i)+c) *= first_pivot;
-  }
-
-  long double next_pivot = *(*(m->entries+i+1)+j+1);
-  for (int c = j+1; c < m->columns; c++){
-        *(*(m->entries+i+1)+c) *= 1.000000/next_pivot;
-  }
-  i++;
-  j++;
-  m_print_matrix(m);
-
-
-
-
-
-
-
-
-
-
-  while(i < m->rows && j < m->columns){
-
-    sleep(3);
-    long double cur_pivot = *(*(m->entries+i)+j);
-    for(int r = i+1; r < m->rows; r++){
-  //    printf("%Lf%s", cur_pivot, "\n");
-      long double cur_entry = *(*(m->entries+r)+j);
-      for(int c = 0; c < m->columns; c++){
-          *(*(m->entries+i)+c) *= cur_entry;
-      }
-      sleep(3);
-m_print_matrix(m);
-      printf("%s", "\n");
-      for(int c = 0; c < m->columns; c++){
-          *(*(m->entries+r)+c) = *(*(m->entries+r)+c) - *(*(m->entries+i)+c);
-      }
-      printf("%Lf%s", *(*(m->entries+r)+j), "\n");
-      sleep(3);
-      m_print_matrix(m);
-        sleep(3);
-        printf("%s", "\n");
-      for(int c = 0; c < m->columns; c++){
-          *(*(m->entries+i)+c) *= one/cur_entry;
-      }
-      m_print_matrix(m);
-        sleep(3);
-        printf("%s", "\n");
-    }
-  //  printf("%Lf%s%s", cur_pivot,"the current pivot", "\n");
-    for (int c = 0; c < m->columns; c++){
-          *(*(m->entries+i)+c) *= cur_pivot;
-    }
-
-
-    i++;
-    j++;
-  }
-
-}
-*/
-
-/*void m_lower_tri_form(Matrix *m){
-  int i = 0;
-  int j = 0;
-  long double one = 1.000000;
-  while(i <= m->rows && j <= m->columns){
-    long double entry = *(*(m->entries+i)+j);
-    for(int r = i+1; r < m->rows; r++){
-      long double last_entry = *(*(m->entries+r)+j);
-      sleep(3);
-     printf("%s%d%s", "value of r: ", r, "\n");
-      printf("%s%d%s%d%s%Lf%s", " We are are at row ",r, " column ",j, " i.e ", entry, "\n");
-      printf("%s%d%d%s%Lf%s", " Okay, now to reduce ", i, j, " to one i.e ", entry, "\n" );
-      for(int c = j; c < m->columns; c++){
-
-    sleep(3);
-    printf("%s%d%d%s%Lf%s%Lf%s", " We multiply ", i, c, " i.e ", *(*(m->entries+i)+c), " by ", one/entry, "\n" );
-	*(*(m->entries+i)+c) =  *(*(m->entries+i)+c) * one/entry;
-  printf("%s%d%d%s%Lf%s", " and the value of ", i,c, " is now ", *(*(m->entries+i)+c), "\n" );
-    sleep(3);
-	 printf("%s%d%s", "value of c: ", c, "\n");
-      }
-      sleep(3);
-      m_print_matrix(m);
-      printf("%s", "\n");
-      for(int d = j; d < m->columns; d++){
-         multiply row i with current row
-        sleep(3);
-       printf("%s%d%d%s%d%d%s%Lf%s", " Okay, now to adjust ", i, j, " to be the value of" ,i, d,  " i.e ", *(*(m->entries+r)+j), "\n" );
-	*(*(m->entries+i)+d) =  *(*(m->entries+i)+d) *  *(*(m->entries+r)+j);
-	 printf("%s%d%s", "value of d: ", d, "\n");
-   printf("%s%d%d%s%Lf%s", " And the value of ", i , d, " is now ", *(*(m->entries+i)+d), "\n" );
-      }
-      sleep(3);
-      m_print_matrix(m);
-      printf("%s", "\n" );
-      sleep(3);
-      printf("%s%d%d%s%Lf%s", " Okay, reduce", r, j, " i.e ", *(*(m->entries+r)+j), " to be zero \n" );
-      for(int e = j; e < m->columns; e++){
-       sleep(3);
-	*(*(m->entries+r)+e) =  *(*(m->entries+r)+e) -  *(*(m->entries+i)+e);
-  printf("%s%d%d%s%Lf%s", " And the value of ", r , e, " is now ", *(*(m->entries+r)+e), "\n" );
-      }
-      sleep(3);
-      m_print_matrix(m);
-      printf("%s", "\n" );
-     sleep(3);
-      printf("%s%d%d%s%Lf%s%d%s%Lf%s", " Okay, now to reduce ", i, j, " to one i.e ", entry, " again by multiplying row ", i, " by ", one/last_entry ,"\n" );
-      for(int f = j; f < m->columns; f++){
-     sleep(3);
-	*(*(m->entries+i)+f) = *(*(m->entries+i)+f) * one/last_entry;
-      }
-      sleep(3);
-      m_print_matrix(m);
-      printf("%s", "\n" );
-       sleep(3);
-     printf("%s%d%d%s%Lf%s", " and the value of ", i, j, " is now ",*(*(m->entries+i)+j), "\n" );
-    sleep(3);
-  printf("%s%d%d%s%Lf%s", " Okay, now to restore ", i, j, " its former value i.e ", entry , "\n" );
-
-     m_print_matrix(m);
-     printf("%s", "\n" );
-    }
-    printf("%Lf%s", entry, "\n");
-    for(int c = j; c < m->columns; c++){
-        sleep(3);
-        *(*(m->entries+i)+c)*= *(*(m->entries+i)+c) * entry;
-         sleep(3);
-        printf("%s%d%d%s%Lf%s", " and the value of ", i,c, " is now ",*(*(m->entries+i)+c), "\n" );
-        j++;
-        i++;
        }
+         for(int c = j; c > -1; c--){
+           *(*(m->entries+i)+c) = *(*(m->entries+i)+c) * current_pivot;
+         }
+
+      i--;
+      j--;
+    }
+  //    printf("%s", "\n");
+  //  m_print_matrix(m);
+  m->kind = square_lower_triangular;
   }
-     printf("%s", "does code reach here? \n");
-}
-*/
 
 
-void m_scalar_mult(Matrix *m, int scalar){
-  double long scalari = (long double) scalar;
+
+void m_scalar_mult(Matrix *m, long double scalar){
   for(int i = 0; i < m->rows; i++){
     for(int j = 0; j < m->columns; j++){
-      *(*(m->entries+i)+j) =  *(*(m->entries+i)+j) * scalari;
+      *(*(m->entries+i)+j) =  *(*(m->entries+i)+j) * scalar;
     }
   }
 }
@@ -610,4 +493,23 @@ Matrix *m_create_identity_matrix(unsigned long long rows, unsigned long long col
       j++;
   }
    return m;
+}
+
+Matrix *m_inverse_matrix(Matrix *m){
+  Matrix *copy = m_copy_matrix(m);
+  double long determinant = m_determinant(copy);
+  m_destroy_matrix(copy);
+  Matrix *inverse = m_copy_matrix(m);
+  m_scalar_mult(m, 1.000000/determinant);
+  return inverse;
+}
+
+Matrix *m_copy_matrix(Matrix *m){
+  Matrix *copy = m_create_matrix(m->rows, m->columns, NO);
+  for(int i = 0; i < m->rows; i++){
+    for(int j = 0; j < m->columns; j++){
+      *(*(copy->entries+i)+j) =  *(*(m->entries+i)+j);
+    }
+  }
+  return copy;
 }

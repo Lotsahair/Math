@@ -15,3 +15,10 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.
    I'd prefer not to give any contact information as this is a personal project. I made it free out of principle */ 
+
+#ifndef LINKED_L
+#define LINKED_L
+
+
+
+#endif

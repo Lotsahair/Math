@@ -18,7 +18,7 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.
    I'd prefer not to give any contact information as this is a personal project. I made it free out of principle */
 int main(int argc, char *argv[]){
-  /*   Matrix *a = m_create_matrix(3,6,YES );
+     Matrix *a = m_create_matrix(3,6,YES );
    *(*(a->entries+0)+0)=0.000000;
   *(*(a->entries+0)+1)=0.000000;
   *(*(a->entries+0)+2)=-2.000000;
@@ -39,16 +39,10 @@ int main(int argc, char *argv[]){
   *(*(a->entries+2)+5)=-1.000000;
     m_print_matrix(a);
   printf("%s", "matrix a above \n");
-              m_ref(a);
+              m_rref(a);
     printf("%s", "\n");
          m_print_matrix(a);
 	 m_destroy_matrix(a);
- */
-    Matrix *a = m_create_identity_matrix(4,4);
-    //   m_lower_tri_form(a);
-    m_print_matrix(a);
-    printf("%s", "\n");
-    //        printf("%s%Lf%s", "value of determinant a:", m_determinant(a), "\n");
-  m_destroy_matrix(a);
+
   return 0;
 }
