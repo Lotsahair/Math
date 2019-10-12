@@ -33,6 +33,7 @@ typedef struct Matrices{
   unsigned long long columns;
   long double **entries;
   Matrix_Kind kind;
+  int current_row; //a helper variable used for the LP/ILP solver to know at which row we add the constraints
   /*A byte to denote whether we have had to swap rows to ensure nonzero entry in pivot. Used to adjus where to look for next entry */
   char has_swapped[1];
   int column_offset;
